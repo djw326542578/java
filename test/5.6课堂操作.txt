@@ -1,0 +1,65 @@
+编译      javac -encoding UTF-8    文件名.java
+运行      java   文件名
+清屏     cls
+切盘    （切e盘）   e：  
+进到所在目录	 cd  目录
+查看该目录下文件	 dir
+
+
+重点：（规定）
+1.源代码中 class 后面的名称 要和 文件名一样
+2.文件名按照 每个单词的首字母大写的方式命名
+
+
+
+JDK(Java Development Kit)  Java 开发工具包
+	javac  Java编辑器
+JRE(Java Runtime Environment)   java  运行环境
+JVM （java virtual nachine）  java  虚拟机
+
+
+1.面向对象 Oriented Object
+
+对象  (object)  生活的具体物体的抽象
+	1.状态     （属性）
+	2.行为     （方法）
+
+封装的思想   区分内和外
+
+2.类 
+
+对象的蓝图，模板
+
+
+一.目标：
+	搞定环境
+	1.JDK  （开发工具包）
+	命令：    Javac-help（Java命令帮助）
+		编译      javac -encoding UTF-8    文件名.java
+		可能出现编译错误
+
+	2.JRE（运行环境）
+	命令：  运行      java   文件名
+		可能出现运行错误
+		运行在JVM（虚拟机）上
+
+
+二.简单的源代码格式：
+
+public class 类名称 {
+	//java 的入口函数（方法）
+	public static void main（String[ ] args）{
+	//写代码位置
+	System.out.println("中文 或 英文")；//换行输出
+                System.out.print("中文 或 英文")；//不换行输出
+	}
+}
+
+注：
+类名称要和文件名一样（规定）
+类名称要用英语，不要用中文或者拼音（规范）
+
+
+
+
+
