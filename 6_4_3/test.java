@@ -10,7 +10,7 @@ public class test{
 		
 		while(fast!=null){
 			fast=fast.next;
-			if(fast=null){
+			if(fast==null){
 				break;
 			}
 			slow=slow.next;

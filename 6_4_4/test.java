@@ -24,7 +24,7 @@ public class test{
 				last=cur1;
 				cur1=next;
 			}else{
-				ListNode next =cur2.next;
+				ListNode.next =cur2.next;
 				if(result==null){
 					cur2.next=result;
 					result=cur2;
