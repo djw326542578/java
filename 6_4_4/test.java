@@ -15,7 +15,7 @@ public class test{
 				ListNode next =cur1.next;
 				if(result==null){
 					cur1.next=result;
-					result.=cur1;
+					result=cur1;
 					
 				}else{
 					cur1.next=null;
