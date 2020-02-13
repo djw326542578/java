@@ -62,7 +62,8 @@ public class Controller implements Initializable {
             @Override
             public void run() {
                 System.out.println("执行文件扫描");
-                new FileScanner.scan(path);
+                new FileScanner().scan(path);
+                // TODO
                 freshTable();
             }
         });
