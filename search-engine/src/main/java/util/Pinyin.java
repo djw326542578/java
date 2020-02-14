@@ -8,8 +8,12 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Pinyin {
+
+    private static final String CHINESE_PATTERN ="[\\u4E00-\\u9FA5]";
     public static final HanyuPinyinOutputFormat FORMAT = new HanyuPinyinOutputFormat();
     static {
         //拼音小写
@@ -18,6 +22,10 @@ public class Pinyin {
         FORMAT.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
         //设置带V
         FORMAT.setVCharType(HanyuPinyinVCharType.WITH_V);
+    }
+
+    public static boolean containsChinese(String name){
+        return name.matches(".*" + CHINESE_PATTERN + ".*");
     }
     public static String[] get(String name){
         String[] result = new String[2];
@@ -54,15 +62,9 @@ public class Pinyin {
                 String[] pinyins = PinyinHelper.toHanyuPinyinStringArray(chars[i],FORMAT);
                 if (pinyins == null || pinyins.length == 0){
                     result[i] = new String[]{String.valueOf(chars[i])};
-                }else if (fullSpell){
-                    result[i] = pinyins;
                 }else {
-                    String[] array = new  String[pinyins.length];
-                    for (int j = 0;j<pinyins.length;j++){
-                        array[j] =String.valueOf(pinyins[j].charAt(0));
+                    result[i] = unique(pinyins,fullSpell);
                     }
-                    result[i] = array;
-                }
             } catch (BadHanyuPinyinOutputFormatCombination badHanyuPinyinOutputFormatCombination) {
                 result[i] = new String[]{String.valueOf(chars[i])};
             }
@@ -77,13 +79,25 @@ public class Pinyin {
             return pinyin[0];
         }else {
             for (int i = 1;i<pinyin.length;i++){
-                pinyin[0] = composes(pinyin[0],pinyin[i]);
+                pinyin[0] = compose(pinyin[0],pinyin[i]);
             }
             return pinyin[0];
         }
     }
 
-    public static String[] composes(String[] pinyins1,String[] pinyins2){
+    public static String[] unique(String[] array,boolean fullspell){
+        Set<String> set = new HashSet<>();
+        for (String s : array){
+            if (fullspell){
+                set.add(s);
+            }else {
+                set.add(String.valueOf(s.charAt(0)));
+            }
+        }
+        return set.toArray(new String[set.size()]);
+    }
+
+    public static String[] compose(String[] pinyins1,String[] pinyins2){
         String[] result = new String[pinyins1.length * pinyins2.length];
 
         for (int i = 0;i<pinyins1.length;i++){
@@ -97,4 +111,6 @@ public class Pinyin {
     public static void main(String[] args) {
         System.out.println(Arrays.toString(get("大多数")));
     }
+
+
 }

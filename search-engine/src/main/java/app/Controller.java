@@ -13,11 +13,14 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Window;
 import task.DBInit;
+import task.FileSave;
 import task.FileScanner;
+import task.ScanCallback;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 
 public class Controller implements Initializable {
 
@@ -61,10 +64,19 @@ public class Controller implements Initializable {
         task = new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("执行文件扫描");
-                new FileScanner().scan(path);
-                // TODO
-                freshTable();
+                try {
+                    System.out.println("执行文件扫描");
+                    ScanCallback callback = new FileSave();
+                    FileScanner scanner = new FileScanner(callback);
+
+                    scanner.scan(path);
+                    scanner.waitFinish();
+                    System.out.println("任务执行完毕，刷新表格");
+                    // TODO
+                    freshTable();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         task.start();
