@@ -1,15 +1,13 @@
 package task;
 
 import java.io.File;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class FileScanner {
 
-    private ThreadPoolExecutor pool = new ThreadPoolExecutor(3,3,0,TimeUnit.MICROSECONDS,new LinkedBlockingDeque<>(),new ThreadPoolExecutor.CallerRunsPolicy());
-
+    //private ThreadPoolExecutor pool = new ThreadPoolExecutor(3,3,0,TimeUnit.MICROSECONDS,new LinkedBlockingDeque<>(),new ThreadPoolExecutor.AbortPolicy());
+    private ExecutorService pool = Executors.newFixedThreadPool(4);
     private  ScanCallback callback;
 
     public FileScanner(ScanCallback callback) {
@@ -36,7 +34,12 @@ public class FileScanner {
                             if (child.isDirectory()) {
                                 //System.out.println("文件夹" + child.getPath());
                                 count.incrementAndGet();
-                                doscan(child);
+                                pool.execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        doscan(child);
+                                    }
+                                });
                             }
                             // else {
                               //  System.out.println("文件" + child.getPath());
@@ -57,11 +60,21 @@ public class FileScanner {
     }
 
     public void  waitFinish()throws InterruptedException{
+
         synchronized (lock){
             lock.wait();
         }
 
+        shutdown();
+
     }
+
+    //关闭线程池
+    public void shutdown(){
+        pool.shutdown();
+        pool.shutdownNow();
+    }
+
 
     public static void main(String[] args) throws InterruptedException {
         Thread t2 = new Thread(new Runnable() {

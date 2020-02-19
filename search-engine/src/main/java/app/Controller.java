@@ -58,17 +58,20 @@ public class Controller implements Initializable {
             return;
         // 获取选择的目录路径，并显示
         String path = file.getPath();
-        // TODO
+
         srcDirectory.setText(path);
+
+        if (task != null ){
+            task.interrupt();
+        }
 
         task = new Thread(new Runnable() {
             @Override
             public void run() {
+                ScanCallback callback = new FileSave();
+                FileScanner scanner = new FileScanner(callback);
                 try {
                     System.out.println("执行文件扫描");
-                    ScanCallback callback = new FileSave();
-                    FileScanner scanner = new FileScanner(callback);
-
                     scanner.scan(path);
                     scanner.waitFinish();
                     System.out.println("任务执行完毕，刷新表格");
@@ -76,6 +79,7 @@ public class Controller implements Initializable {
                     freshTable();
                 } catch (Exception e) {
                     e.printStackTrace();
+                    scanner.shutdown();
                 }
             }
         });
@@ -90,4 +94,6 @@ public class Controller implements Initializable {
 
 
     }
+
+
 }
