@@ -79,7 +79,7 @@ public class Controller implements Initializable {
                     freshTable();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    scanner.shutdown();
+
                 }
             }
         });

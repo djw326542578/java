@@ -9,37 +9,36 @@ public class FileScanner {
     //private ThreadPoolExecutor pool = new ThreadPoolExecutor(3,3,0,TimeUnit.MICROSECONDS,new LinkedBlockingDeque<>(),new ThreadPoolExecutor.AbortPolicy());
     private ExecutorService pool = Executors.newFixedThreadPool(4);
     private  ScanCallback callback;
+    private volatile AtomicInteger count = new AtomicInteger();
+    private Object lock = new Object();
 
     public FileScanner(ScanCallback callback) {
+
         this.callback = callback;
     }
 
 
     public void scan(String path){
+        count.incrementAndGet();
         doscan(new File(path));
     }
-    private volatile AtomicInteger count = new AtomicInteger();
-    private Object lock = new Object();
+
 
 
     public void doscan(File dir) {
-        callback.callback(dir);
+
         pool.execute(new Runnable() {
             @Override
             public void run() {
                 try {
+                    callback.callback(dir);
                     File[] children = dir.listFiles();
                     if (children != null) {
                         for (File child : children) {
                             if (child.isDirectory()) {
-                                //System.out.println("文件夹" + child.getPath());
+                                System.out.println("当前任务数" + count.get());
                                 count.incrementAndGet();
-                                pool.execute(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        doscan(child);
-                                    }
-                                });
+                               doscan(child);
                             }
                             // else {
                               //  System.out.println("文件" + child.getPath());
@@ -60,20 +59,21 @@ public class FileScanner {
     }
 
     public void  waitFinish()throws InterruptedException{
+        try {
+            synchronized (lock){
+                lock.wait();
+            }
+        }finally {
+            System.out.println("关闭线程池");
+            pool.shutdownNow();
 
-        synchronized (lock){
-            lock.wait();
         }
-
-        shutdown();
-
     }
 
     //关闭线程池
-    public void shutdown(){
-        pool.shutdown();
-        pool.shutdownNow();
-    }
+    //public void shutdown(){
+
+   // }
 
 
     public static void main(String[] args) throws InterruptedException {
