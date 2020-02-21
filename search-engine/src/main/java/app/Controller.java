@@ -90,7 +90,12 @@ public class Controller implements Initializable {
     private void freshTable(){
         ObservableList<FileMeta> metas = fileTable.getItems();
         metas.clear();
-        // TODO
+        String dir = srcDirectory.getText();
+        if (dir != null && dir.trim().length() != 0){
+            String content = searchField.getText();
+            // TODO
+        }
+
 
 
     }

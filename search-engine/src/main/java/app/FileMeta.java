@@ -6,6 +6,7 @@ import util.Util;
 
 import java.io.File;
 import java.util.Date;
+import java.util.Objects;
 
 public class FileMeta {
     private final Boolean isDirectory;
@@ -38,6 +39,31 @@ public class FileMeta {
         }
         sizeText = Util.parseSize(size);
         lastModifiedText = Util.parseDate(lastModified);
+    }
+
+    @Override
+    public String toString() {
+        return "FileMeta{" +
+                "isDirectory=" + isDirectory +
+                ", name='" + name + '\'' +
+                ", path='" + path + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FileMeta meta = (FileMeta) o;
+        return Objects.equals(isDirectory, meta.isDirectory) &&
+                Objects.equals(name, meta.name) &&
+                Objects.equals(path, meta.path);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(isDirectory, name, path);
     }
 
     public Boolean getDirectory() {

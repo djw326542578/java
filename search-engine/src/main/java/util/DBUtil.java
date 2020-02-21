@@ -25,7 +25,7 @@ public class DBUtil {
                 if (DATA_SOURCE == null){
                     SQLiteConfig config = new SQLiteConfig();
                     config.setDateStringFormat(Util.DATE_PATTERN);
-                    DATA_SOURCE = new SQLiteDataSource();
+                    DATA_SOURCE = new SQLiteDataSource(config);
                     ((SQLiteDataSource)DATA_SOURCE).setUrl(getUrl());
                 }
             }
