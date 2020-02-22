@@ -1,5 +1,6 @@
 package app;
 
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -12,15 +13,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Window;
-import task.DBInit;
-import task.FileSave;
-import task.FileScanner;
-import task.ScanCallback;
+import task.*;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Scanner;
+
 
 public class Controller implements Initializable {
 
@@ -93,8 +92,11 @@ public class Controller implements Initializable {
         String dir = srcDirectory.getText();
         if (dir != null && dir.trim().length() != 0){
             String content = searchField.getText();
-            // TODO
+            List<FileMeta> fileMetas = FileSearch.search(dir,content);
+            metas.addAll(fileMetas);
         }
+
+
 
 
 
